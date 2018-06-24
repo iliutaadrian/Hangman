@@ -57,7 +57,7 @@
     <hr>
 
     <div class="form-group ">
-        <input type="button" id="start" class="btn btn-primary" value="Start joc" />
+        <input type="button" id="start" class="btn btn-primary" value="Start joc"/>
     </div>
 
     <div id="timer" style="margin: 10px"></div>
@@ -69,13 +69,15 @@
             <input type="text" class="form-control" id="cuvant" value="WORD" style="text-align: center; font-size: larger; font-weight: bold" readonly/>
         </div>
 
-        <div class="form-group">
-            <input type="text" class="form-control" id="litera" placeholder="Complete the correct letter" maxlength="1" style="text-align: center"/>
+        <div class="form-group" style="padding: 20px">
+            <?php
+                $litere = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                $array = str_split($litere);
 
-        </div>
-
-        <div class="form-group">
-            <input type="button" id="ghiceste" class="btn btn-primary" value="Guess the letter" />
+                foreach ($array as $char) {
+                    echo '<input type="button" onclick="selectLetter(\''.$char.'\')" value="'.$char.'" id="litere_'.$char.'"class="butn btn btn-basic" style="margin: 8px">';
+                }
+            ?>
         </div>
 
         <div class="form-group">
@@ -88,8 +90,8 @@
     </form>
 </div>
 
-<script src="http://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 <script type="text/javascript">
     let cuvantOriginal;
     let cuvantModificat;
@@ -118,6 +120,8 @@
     };
 
     $(document).ready(function () {
+        $('.butn').css('border', '1px solid black');
+
         $('#start').on('click', function () {
             incercari=0;
             wordSize=4;
@@ -135,10 +139,6 @@
 
             Clock.stop();
             Clock.start();
-        });
-
-        $('#ghiceste').on('click', function () {
-            verifica();
         });
 
         $('#level').on('click', function () {
@@ -190,19 +190,19 @@
         });
     }
 
-    function verifica() {
+    function selectLetter(char){
         let ghicit = 0;
         let terminat = 1;
-        let litera = $('#litera').val();
 
         if(cuvantModificat==null && cuvantOriginal==null){
             alert('Trebuie sa incepi jocul');
+            terminat = 0;
         }else {
 
             for(let i = 1; i<cuvantOriginal.length-1; i++){
-                if(cuvantOriginal[i]===litera.toUpperCase()){
+                if(cuvantOriginal[i] === char){
                     ghicit = 1;
-                    cuvantModificat[i] = litera.toUpperCase();
+                    cuvantModificat[i] = char;
                 }
                 if(cuvantModificat[i]==='_'){
                     terminat=0;
@@ -211,9 +211,11 @@
 
             if(ghicit === 1){
                 $('#cuvant').val(cuvantModificat.join(" "));
+                $('#litere_'+char).css('border', '2px solid black');
             }
             else{
                 incercari++;
+                $('#litere_'+char).css('border', '2px solid red');
                 $('#incercari').html('<b>Incercari: </b>'+incercari);
             }
         }
@@ -235,6 +237,7 @@
             newWord(wordSize);
             $('#level').css('visibility', 'hidden');
         }
+        $('.butn').css('border', '1px solid black');
     }
 </script>
 

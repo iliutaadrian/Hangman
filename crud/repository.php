@@ -11,7 +11,7 @@ if(isset($_POST['key'])){
             while($data = $stmt->fetch_array()){
                 $response .= '
                     <tr>
-                        <td>'. $data['cuvant'].'</td>
+                        <td>'.$data['cuvant'].'</td>
                     </tr>
                 ';
             }
